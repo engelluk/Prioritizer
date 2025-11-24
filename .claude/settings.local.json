@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python test_strategies.py:*)",
+      "Bash(python test_streamlit_flow.py:*)",
+      "Bash(timeout 5 streamlit run:*)",
+      "Bash(python test_simplified.py:*)",
+      "Bash(python test_auto.py:*)",
+      "Bash(python test_main_app.py:*)",
+      "Bash(dir:*)",
+      "Bash(python:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
