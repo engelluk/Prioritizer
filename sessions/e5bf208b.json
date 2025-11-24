@@ -1,0 +1,64 @@
+{
+  "id": "e5bf208b",
+  "name": "Session ABC",
+  "strategy": "binary",
+  "settings": {},
+  "columns": {
+    "id": "ID",
+    "name": "Name",
+    "desc": "Description_123"
+  },
+  "data": [
+    {
+      "ID": 1,
+      "Name": "Anton",
+      "Description_123": "Anton, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    },
+    {
+      "ID": 2,
+      "Name": "Jochen",
+      "Description_123": "Jochen, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    },
+    {
+      "ID": 3,
+      "Name": "Jonas",
+      "Description_123": "Jonas, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    },
+    {
+      "ID": 4,
+      "Name": "Karl",
+      "Description_123": "Karl, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    },
+    {
+      "ID": 5,
+      "Name": "Johhny",
+      "Description_123": "Johhny, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    },
+    {
+      "ID": 6,
+      "Name": "Mike",
+      "Description_123": "Mike, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    },
+    {
+      "ID": 7,
+      "Name": "Pete",
+      "Description_123": "Pete, Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam"
+    }
+  ],
+  "users": {
+    "Lukas": {
+      "ordering": [
+        6,
+        5,
+        0,
+        3,
+        1,
+        4,
+        2
+      ],
+      "completed": true,
+      "comparisons": 10
+    }
+  },
+  "expected_users": []
+}
