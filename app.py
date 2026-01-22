@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import List, Dict, Optional, Tuple, Any
 
 import pandas as pd
+import qrcode
 import streamlit as st
 
 
@@ -336,6 +337,22 @@ def download_excel(df: pd.DataFrame) -> bytes:
     buf = io.BytesIO()
     with pd.ExcelWriter(buf, engine="xlsxwriter") as w:
         df.to_excel(w, index=False)
+    return buf.getvalue()
+
+
+def generate_session_qr(session_id: str) -> bytes:
+    """Generate a QR code image for joining a session."""
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(session_id)
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
     return buf.getvalue()
 
 
@@ -738,7 +755,17 @@ def render_create_session_view():
                     settings=settings,
                 )
                 st.success(f"Session created! ID: **{session_id}**")
-                st.info("Share the session name with participants so they can join.")
+                st.info("Share the session ID with participants or let them scan the QR code.")
+
+                col_qr, col_info = st.columns([1, 2])
+                with col_qr:
+                    st.image(generate_session_qr(session_id), caption=f"Session: {session_id}", width=200)
+                with col_info:
+                    st.markdown("**How to join:**")
+                    st.markdown("1. Open the app on your device")
+                    st.markdown("2. Click **Join Session**")
+                    st.markdown(f"3. Select **{session_name}**")
+
                 if st.button("Go to Home"):
                     go_home()
                     st.rerun()
@@ -934,12 +961,18 @@ def render_results_view():
 
     st.divider()
 
-    # Session info
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Items", len(session["data"]))
-    c2.metric("Users Participated", len(session["users"]))
-    completed = len([u for u in session["users"].values() if u.get("completed")])
-    c3.metric("Completed", completed)
+    # Session info with QR code
+    col_metrics, col_qr = st.columns([3, 1])
+
+    with col_metrics:
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Items", len(session["data"]))
+        c2.metric("Users Participated", len(session["users"]))
+        completed = len([u for u in session["users"].values() if u.get("completed")])
+        c3.metric("Completed", completed)
+
+    with col_qr:
+        st.image(generate_session_qr(ss.current_session_id), caption="Scan to join", width=120)
 
     st.divider()
 
