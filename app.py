@@ -28,7 +28,7 @@ import streamlit as st
 APP_TITLE = "Prioritizer"
 APP_ICON = "⚖️"
 DEBUG = False  # Set to True for verbose state logging
-APP_URL = "https://prioritizer.streamlit.app"  # Base URL for QR codes
+APP_URL = "https://prioritizer-42.streamlit.app"  # Base URL for QR codes
 
 STRATEGY_BINARY = "binary"
 STRATEGY_ELO = "elo"
