@@ -28,6 +28,7 @@ import streamlit as st
 APP_TITLE = "Prioritizer"
 APP_ICON = "⚖️"
 DEBUG = False  # Set to True for verbose state logging
+APP_URL = "https://prioritizer.streamlit.app"  # Base URL for QR codes
 
 STRATEGY_BINARY = "binary"
 STRATEGY_ELO = "elo"
@@ -260,6 +261,17 @@ def init_state():
 init_state()
 ss = st.session_state
 
+# --- Handle QR code session parameter ---
+query_params = st.query_params
+if "session" in query_params and ss.view_mode == "home":
+    session_id = query_params["session"]
+    # Verify session exists
+    if load_session(session_id):
+        ss.current_session_id = session_id
+        ss.view_mode = "join_session"
+        st.query_params.clear()
+        st.rerun()
+
 
 # --- Utility Functions ---
 def reset_all():
@@ -341,14 +353,15 @@ def download_excel(df: pd.DataFrame) -> bytes:
 
 
 def generate_session_qr(session_id: str) -> bytes:
-    """Generate a QR code image for joining a session."""
+    """Generate a QR code image with URL for joining a session."""
+    session_url = f"{APP_URL}/?session={session_id}"
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_M,
         box_size=10,
         border=4,
     )
-    qr.add_data(session_id)
+    qr.add_data(session_url)
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
     buf = io.BytesIO()
@@ -762,7 +775,8 @@ def render_create_session_view():
                     st.image(generate_session_qr(session_id), caption=f"Session: {session_id}", width=200)
                 with col_info:
                     st.markdown("**How to join:**")
-                    st.markdown("1. Open the app on your device")
+                    st.markdown("Scan the QR code to go directly to this session, or:")
+                    st.markdown(f"1. Go to `{APP_URL}`")
                     st.markdown("2. Click **Join Session**")
                     st.markdown(f"3. Select **{session_name}**")
 
@@ -794,7 +808,17 @@ def render_join_session_view():
 
     # Session selection
     session_names = {s["name"]: s["id"] for s in sessions}
-    selected_name = st.selectbox("Select Session", list(session_names.keys()))
+    session_ids = {s["id"]: s["name"] for s in sessions}
+    session_list = list(session_names.keys())
+
+    # Pre-select session if coming from QR code
+    default_idx = 0
+    if ss.current_session_id and ss.current_session_id in session_ids:
+        preselected_name = session_ids[ss.current_session_id]
+        if preselected_name in session_list:
+            default_idx = session_list.index(preselected_name)
+
+    selected_name = st.selectbox("Select Session", session_list, index=default_idx)
     selected_id = session_names[selected_name]
 
     # Show session info
